@@ -1,7 +1,9 @@
 import { DataGrid } from "@mui/x-data-grid";
 import type { GridColDef } from "@mui/x-data-grid";
-import { Box } from "@mui/material";
-import { useSelector } from "react-redux";
+import { Box, TextField } from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
+import { useMemo } from "react";
+import { setSearchTerm } from "../redux/reducers/driverSlice";
 
 const columns: GridColDef[] = [
   { field: "fusionId", headerName: "Fusion ID", flex: 1, minWidth: 120 },
@@ -39,13 +41,29 @@ const columns: GridColDef[] = [
 ];
 
 export default function DriverTable() {
-  const drivers = useSelector((state: any) => state.driver.drivers);
-  console.log("🚀 ~ DriverTable ~ drivers:", drivers);
+  const dispatch = useDispatch();
+  const { drivers, searchTerm } = useSelector((state: any) => state.driver);
+
+  const filteredDrivers = useMemo(() => {
+    if (!searchTerm) return drivers;
+    return drivers.filter((driver: any) =>
+      driver.fullName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [drivers, searchTerm]);
 
   return (
-    <Box sx={{ height: "100vh", width: "100vw" }}>
+    <Box sx={{ height: "100vh", width: "100vw", p: 2 }}>
+      <Box sx={{ mb: 2, maxWidth: 300 }}>
+        <TextField
+          label="Search by Full Name"
+          variant="outlined"
+          fullWidth
+          value={searchTerm}
+          onChange={(e) => dispatch(setSearchTerm(e.target.value))}
+        />
+      </Box>
       <DataGrid
-        rows={drivers}
+        rows={filteredDrivers}
         columns={columns}
         checkboxSelection
         disableRowSelectionOnClick
@@ -53,6 +71,7 @@ export default function DriverTable() {
           pagination: { paginationModel: { page: 0, pageSize: 5 } },
         }}
         pageSizeOptions={[5, 10, 20]}
+        getRowId={(row) => row.id || row.fusionId}
       />
     </Box>
   );

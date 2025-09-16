@@ -19,6 +19,7 @@ interface Driver {
 
 interface DriverState {
   drivers: Driver[];
+  searchTerm: string; // 🔍 New field
 }
 
 const initialState: DriverState = {
@@ -99,6 +100,7 @@ const initialState: DriverState = {
       dlExpiryDate: "2027-11-01",
     },
   ],
+  searchTerm: "", // 🔍 New initial value
 };
 
 const driverSlice = createSlice({
@@ -111,8 +113,11 @@ const driverSlice = createSlice({
     removeDriver: (state, action: PayloadAction<number>) => {
       state.drivers = state.drivers.filter((d) => d.id !== action.payload);
     },
+    setSearchTerm: (state, action: PayloadAction<string>) => {
+      state.searchTerm = action.payload;
+    },
   },
 });
 
-export const { addDriver, removeDriver } = driverSlice.actions;
+export const { addDriver, removeDriver, setSearchTerm } = driverSlice.actions;
 export default driverSlice.reducer;
