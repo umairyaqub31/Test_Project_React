@@ -1,10 +1,14 @@
 import { DataGrid } from "@mui/x-data-grid";
 import type { GridColDef } from "@mui/x-data-grid";
-import { Box, TextField } from "@mui/material";
+import { Box, TextField, Button } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { useMemo } from "react";
 import { setSearchTerm } from "../redux/reducers/driverSlice";
 
+const handleApprove = (driver: any) => {
+  console.log("Approved driver:", driver);
+  // You can dispatch a Redux action here or call an API
+};
 const columns: GridColDef[] = [
   { field: "fusionId", headerName: "Fusion ID", flex: 1, minWidth: 120 },
   { field: "fullName", headerName: "Full Name", flex: 1, minWidth: 180 },
@@ -37,6 +41,24 @@ const columns: GridColDef[] = [
     headerName: "DL Expiry Date",
     flex: 1,
     minWidth: 180,
+  },
+  {
+    field: "action",
+    headerName: "Action",
+    flex: 1,
+    minWidth: 150,
+    sortable: false,
+    filterable: false,
+    renderCell: (params) => (
+      <Button
+        variant="contained"
+        color="primary"
+        size="small"
+        onClick={() => handleApprove(params.row)}
+      >
+        Approve
+      </Button>
+    ),
   },
 ];
 
