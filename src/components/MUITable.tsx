@@ -3,7 +3,6 @@ import type { GridColDef } from "@mui/x-data-grid";
 import { Box, TextField, Button } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { useMemo } from "react";
-import { setSearchTerm } from "../redux/reducers/driverSlice";
 
 const handleApprove = (driver: any) => {
   console.log("Approved driver:", driver);
@@ -63,7 +62,6 @@ const columns: GridColDef[] = [
 ];
 
 export default function DriverTable() {
-  const dispatch = useDispatch();
   const { drivers, searchTerm } = useSelector((state: any) => state.driver);
 
   const filteredDrivers = useMemo(() => {
@@ -75,15 +73,6 @@ export default function DriverTable() {
 
   return (
     <Box sx={{ height: "100vh", width: "100vw", p: 2 }}>
-      <Box sx={{ mb: 2, maxWidth: 300 }}>
-        <TextField
-          label="Search by Full Name"
-          variant="outlined"
-          fullWidth
-          value={searchTerm}
-          onChange={(e) => dispatch(setSearchTerm(e.target.value))}
-        />
-      </Box>
       <DataGrid
         rows={filteredDrivers}
         columns={columns}
